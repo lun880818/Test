@@ -1,0 +1,279 @@
+/*CatCanOrder-靜態class*/
+package com;
+
+public class CatCanOrder {
+	
+	private static Integer canPrice = 49;
+	private Integer chicken, duck, salmon, beef;
+	private String vip;
+	private Integer chickenSum, duckSum, salmonSum, beefSum, originalSum, totalSum, totalSumAndDeliverFee;
+	private Integer discount;
+	private Integer deliverFee;
+	
+	public CatCanOrder(Integer chicken, Integer duck, Integer salmon, Integer beef, String vip) {
+		super();
+		
+		if(chicken>=0 && duck>=0 && salmon>=0 && beef>=0) {
+			this.chicken = chicken;
+			this.duck = duck;
+			this.salmon = salmon;
+			this.beef = beef;
+			this.vip = vip;
+			
+			this.chickenSum = chicken*canPrice;
+			this.duckSum = duck*canPrice;
+			this.salmonSum = salmon*canPrice;
+			this.beefSum = beef*canPrice;
+			this.originalSum = this.chickenSum+this.duckSum+this.salmonSum+this.beefSum;
+			
+			if(originalSum >=1000) {
+				this.totalSum = originalSum-100;
+			}else {
+				this.totalSum = originalSum;
+			}
+			
+			switch(vip) {
+				case "非會員-無折扣":
+					this.totalSum = totalSum+0;
+					break;
+				case "一般會員-95折":
+					this.totalSum = (int)(totalSum*0.95);
+					break;
+				case "Pro會員-9折":
+					this.totalSum =(int)(totalSum*0.9);
+					break;
+			}
+			
+			this.discount = originalSum-totalSum;
+			
+			if(totalSum>=499) {
+				deliverFee = 0;
+			}else {
+				deliverFee = 75;
+			}
+			
+			totalSumAndDeliverFee = totalSum+deliverFee;
+		}else {
+			
+		}
+		
+		
+		
+		
+		
+	}
+	
+	//getter & setter
+	public Integer getChicken() {
+		return chicken;
+	}
+
+
+	public Integer getDuck() {
+		return duck;
+	}
+
+
+	public Integer getSalmon() {
+		return salmon;
+	}
+
+
+	public Integer getBeef() {
+		return beef;
+	}
+
+
+	public String getVip() {
+		return vip;
+	}
+
+	public Integer getChickenSum() {
+		return chickenSum;
+	}
+
+
+	public Integer getDuckSum() {
+		return duckSum;
+	}
+
+
+	public Integer getSalmonSum() {
+		return salmonSum;
+	}
+
+
+	public Integer getBeefSum() {
+		return beefSum;
+	}
+
+
+	public Integer getOriginalSum() {
+		return originalSum;
+	}
+
+
+	public Integer getTotalSum() {
+		return totalSum;
+	}
+
+
+	public Integer getDiscount() {
+		return discount;
+	}
+
+	
+	//methods
+	
+	String title() {
+		return "口味:"
+				+ "\t數量："
+				+"\t小計";
+	}
+	
+	String outPutOrder() {
+		return "口味:"+ "\t\t數量："	+"\t\t小計："+
+				"\n鮪魚佐雞肉："+"\t\t"+getChicken()+"\t\t"+getChickenSum()+
+				"\n鮪魚佐鴨肉："+"\t\t"+getDuck()+"\t\t"+getDuckSum()+
+				"\n鮪魚佐鮭魚："+"\t\t"+getSalmon()+"\t\t"+getSalmonSum()+
+				"\n鮪魚佐牛肉："+"\t\t"+getBeef()+"\t\t"+getBeefSum()+
+				"\n----------------------------------------------------------------------------------------------------------------------"
+				;
+	}
+	
+	
+	String thousand(){
+		return "已符合　滿千折百!"
+				;
+	}
+	
+	String nonThousand(){
+		return "未符合　滿千折百..."
+				;
+	}
+	
+	String vipNon(){
+		return "未符合　會員折扣(您未加入會員)"
+				;
+	}
+	
+	String vipNormal(){
+		return "已符合　會員折扣(一般會員95折)"
+				;
+	}
+	
+	String vipPro(){
+		return "已符合　會員折扣(Pro會員9折)"
+				;
+	}
+	
+	String deliverFeeFree() {
+		return "已符合　運費折抵(已滿499元 運費0元)";
+	}
+	
+	String deliverFee() {
+		return "未符合　運費折抵(未滿499元　運費75元)";
+	}
+	
+	
+	String outPutSum() {
+		return "----------------------------------------------------------------------------------------------------------------------"+
+				"\n商品總金額：$"+originalSum+"\t活動共折抵：-$"+discount+"\t運費：$"+deliverFee+"\t結帳總金額：$"+totalSumAndDeliverFee;
+	}
+	
+
+}
+
+
+
+--------------------------------------------------------------
+
+
+/*UI event*/
+
+/*送出訂單button*/
+
+JButton btnNewButton = new JButton("送出訂單");
+		btnNewButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				
+				int Chicken = Integer.parseInt(chicken.getText());
+				int Duck = Integer.parseInt(duck.getText());
+				int Salmon = Integer.parseInt(salmon.getText());
+				int Beef = Integer.parseInt(beef.getText());
+				int numbersOfProduct = Chicken+Duck+Salmon+Beef;
+				String Vip = memberList.getSelectedItem().toString();
+				String lastshow = "";
+				
+				if(Chicken>=0 && Duck>=0 && Salmon>=0 && Beef>=0 && numbersOfProduct>0) {
+					CatCanOrder order = new CatCanOrder(Chicken, Duck, Salmon, Beef, Vip);
+					
+					lastshow =order.outPutOrder();
+					
+					if(order.getOriginalSum()>=1000) {
+						lastshow += ("\n"+order.thousand());
+					}else {
+						lastshow += ("\n"+order.nonThousand());
+					}
+					
+					switch(order.getVip()) {
+						case "非會員-無折扣":
+							lastshow += ("\n"+order.vipNon());
+							break;
+						case "一般會員-95折":
+							lastshow += ("\n"+order.vipNormal());
+							break;
+						case "Pro會員-9折":
+							lastshow += ("\n"+order.vipPro());
+							break;
+					}
+					
+					if(order.getTotalSum()>=499) {
+						lastshow += ("\n"+order.deliverFeeFree());
+					}else {
+						lastshow += ("\n"+order.deliverFee());
+					}
+					
+					lastshow += ("\n"+order.outPutSum());
+										
+					show.setText(lastshow);
+				}else {
+					show.setText("商品數量需大於0，或至少加入一項商品，請重新輸入!!");
+				}
+				
+				
+				
+				
+			}
+		});
+		btnNewButton.setBackground(new Color(255, 255, 255));
+		btnNewButton.setForeground(new Color(0, 0, 0));
+		btnNewButton.setFont(new Font("微軟正黑體", Font.BOLD, 28));
+		btnNewButton.setBounds(570, 277, 178, 48);
+		panel_1.add(btnNewButton);
+
+
+
+/*清除button*/
+JButton btnNewButton_1 = new JButton("清除資料");
+		btnNewButton_1.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				chicken.setText("0");
+				duck.setText("0");
+				salmon.setText("0");
+				beef.setText("0");
+				memberList.setSelectedItem("--選擇會員--");
+				show.setText("");
+				
+			}
+		});
+		btnNewButton_1.setForeground(Color.BLACK);
+		btnNewButton_1.setFont(new Font("微軟正黑體", Font.BOLD, 24));
+		btnNewButton_1.setBackground(Color.WHITE);
+		btnNewButton_1.setBounds(161, 283, 146, 40);
+		panel_1.add(btnNewButton_1);
+
+
+
